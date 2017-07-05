@@ -1,0 +1,17 @@
+# The pod name
+Name: kafka-manager
+
+replicaCount: 1
+image: 
+  name: sheepkiller/kafka-manager
+  tag: alpine
+
+zk:
+  hosts: zookeeper.kafka-test:2181
+
+kafka:
+  url: kafka-svc.kafka-test:9092
+
+http:
+  port: 9000
+  nodePort: 30883
