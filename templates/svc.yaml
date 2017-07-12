@@ -8,11 +8,9 @@ metadata:
     release: {{ .Release.Name | quote }}
     chart: "{{.Chart.Name}}-{{.Chart.Version}}"
 spec:
-  type: NodePort
+  type: "LoadBalancer"
   ports:
-  - port: {{.Values.http.port}}
-    nodePort: {{.Values.http.nodePort}}
-    protocol: TCP
-    name: http
+    - port: {{ .Values.http.port }}
+      targetPort: {{ .Values.http.port }}
   selector:
     k8s-app: "{{.Release.Name}}-{{.Values.Name}}"
