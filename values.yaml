@@ -1,17 +1,60 @@
-# The pod name
-Name: kafka-manager
-
 replicaCount: 1
-image: 
-  name: sheepkiller/kafka-manager
+image:
+  repository: sheepkiller/kafka-manager
   tag: alpine
+  pullPolicy: IfNotPresent
+service:
+  fixed:
+    # If this flag is toggled, the uri of the kafka manager Service
+    # will be set to the name provided
+    # /!\ You won't be able to deploy multiple releases on the same namespace
+    # as Helm will complain that an existing service with the same name already
+    # exist.
+    enabled: false
+    name: kafka-manager
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 9000
+ingress:
+  enabled: true
+  # Used to create an Ingress record.
+  hosts:
+    - kafka-manager.local
+  annotations: {}
 
-zk:
-  hosts: zookeeper.kafka-test:2181
-
+# Managed kafka cluster
 kafka:
-  url: kafka-svc.kafka-test:9092
+  # List of cluster you want kafka-manager to ingest.
+  # You can also configure them at runtime with the webui / the API.
+  # see this Github issue for more details:
+  # https://github.com/yahoo/kafka-manager/issues/244
 
-http:
-  port: 9000
-  nodePort: 30883
+  # Note: at least one cluster have to be configured for Kafka-manager
+  # to use Kafka Zk instances as a backend (see below)
+  clusters:
+    # - # You can embed any configuration you need, variables have the same
+    #   # name than the web ui "Add Cluster" form variables.
+    #   name: "default"
+    #   # MANDATORY VALUE
+    #   # Uri at which Kafka Zookeeper's can be contacted.
+    #   zkHosts: "kafka-zookeeper:2181"
+    #   kafkaVersion: "0.9.1"
+
+# Kafka-manager zookeeper configuration.
+# Internal to kafka-manager.
+kafkaManager:
+  # By default, we use the same zookeeper than the first kafka cluster, but if
+  # you want to use another one, just set useKafkaZookeeper to false and
+  # change the zhHosts variable to point to the zk instances.
+  useKafkaZookeeper: true
+  zkHosts: ""
+
+resources: {}
+  # If you do want to specify resources for kafka-manager, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi

@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "kafka-manager.fullname" . }}-bootstrap
+  labels:
+    app: {{ template "kafka-manager.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ template "kafka-manager.fullname" . }}-bootstrap
+      labels:
+        app: {{ template "kafka-manager.name" . }}
+        chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+    spec:
+      containers:
+      - name: bootstrap-kafka-manager
+        image: byrnedo/alpine-curl
+        command:
+        - "sh"
+        - "-c"
+        - {{ include "kafka-manager.bootstrapShellCommand" . | quote }}
+      restartPolicy: Never
