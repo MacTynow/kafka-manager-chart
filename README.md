@@ -51,6 +51,9 @@ must be done at runtime, we are thus using a helm `post-install` hook to send
 cluster add requests from a `alpine-curl` image. Helm won't exit before the
 `post-install` job succeeded.
 
+If you are running into an `Error: timed out waiting for the condition`, this probably mean that the `kafka-manager` deployment isn't healthy,
+thus preventing the hook termination.
+
 ### Accessing the application
 
 Once the chart is deployed, it will give you some informations on how to access your application:
