@@ -1,3 +1,7 @@
+# DEPRECATION NOTICE
+
+I do not maintain this chart and it is likely not to work. I suggest using https://github.com/confluentinc/cp-helm-charts.
+
 # Kafka manager helm chart
 
 This chart let you install [Kafka manager](https://github.com/yahoo/kafka-manager)
